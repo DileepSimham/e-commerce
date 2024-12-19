@@ -29,8 +29,10 @@
     </scm>
     <properties>
         <java.version>17</java.version>
-    <sonar.login>squ_bcbca03171bcdf50e9ad1d8d066488a6ee4e2f0c
-</sonar.login>
+    <sonar.token>squ_bcbca03171bcdf50e9ad1d8d066488a6ee4e2f0c
+</sonar.token>
+
+
 
 
     </properties>
