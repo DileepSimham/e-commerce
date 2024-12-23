@@ -12,5 +12,12 @@ spring:
     hibernate:
       ddl-auto: update
       format_sql: true
+              
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: "http://localhost:8180/realms/e-commerce/protocol/openid-connect/certs"
+
 server:
   port: 8081
