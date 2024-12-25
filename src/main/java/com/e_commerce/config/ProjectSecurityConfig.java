@@ -40,15 +40,20 @@ public class ProjectSecurityConfig {
 						return config;
 					}
 				}))
-				.csrf(csrfConfig -> csrfConfig.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
-						.ignoringRequestMatchers("/contact", "/register")
-						.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-				.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
-				.requiresChannel(rcc -> rcc.anyRequest().requiresInsecure()) // Only HTTP
-				.authorizeHttpRequests((requests) -> requests.requestMatchers("/api/users/**").hasRole("USER")
-						.requestMatchers("/myBalance").hasAnyRole("USER", "ADMIN").requestMatchers("/myLoans")
-						.authenticated().requestMatchers("/myCards").hasRole("USER").requestMatchers("/user")
-						.authenticated().requestMatchers("/notices", "/contact", "/error", "/register").permitAll());
+//				.csrf(csrfConfig -> csrfConfig.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
+//						.ignoringRequestMatchers("/contact", "/register","/api/cart/**")
+//						.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+//				.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+//				.requiresChannel(rcc -> rcc.anyRequest().requiresInsecure()) // Only HTTP
+				
+				.csrf(csrf->csrf.disable())
+				.authorizeHttpRequests((requests) -> requests.requestMatchers("/api/users/allUsers").hasRole("ADMIN").
+						requestMatchers("/api/users/**").hasRole("USER")
+						.requestMatchers("/api/products/**").hasAnyRole("USER", "ADMIN")
+//						.requestMatchers("/api/cart/**").hasAnyRole("USER", "ADMIN")
+						.requestMatchers("/myLoans")
+						.authenticated()
+						.requestMatchers("/keycloak/**","/api/cart/**","/webhook/**").permitAll());
 		http.oauth2ResourceServer(
 				rsc -> rsc.jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter)));
 		/*

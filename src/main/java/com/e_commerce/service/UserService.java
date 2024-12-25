@@ -37,9 +37,9 @@ public class UserService {
         if (existingUser.isPresent()) {
             User user = existingUser.get();
             user.setUsername(updatedUser.getUsername());
-            user.setPassword(updatedUser.getPassword());
+//            user.setPassword(updatedUser.getPassword());
             user.setEmail(updatedUser.getEmail());
-            user.setRole(updatedUser.getRole());
+//            user.setRole(updatedUser.getRole());
             return userRepository.save(user);
         } else {
             // Handle user not found, could throw an exception or return null

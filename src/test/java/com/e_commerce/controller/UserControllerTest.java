@@ -46,10 +46,10 @@ class UserControllerTest {
         user = new User();
         user.setId(1L);
         user.setUsername("johndoe");
-        user.setPassword("password123");
+//        user.setPassword("password123");
         user.setEmail("johndoe@example.com");
-        user.setRole("USER");
-        user.setCreatedAt(LocalDateTime.now());
+//        user.setRole("USER");
+//        user.setCreatedAt(LocalDateTime.now());
     }
 
     @Test
@@ -86,17 +86,17 @@ class UserControllerTest {
         User user1 = new User();
         user1.setId(1L);
         user1.setUsername("johndoe");
-        user1.setPassword("password123");
+//        user1.setPassword("password123");
         user1.setEmail("johndoe@example.com");
-        user1.setRole("USER");
+//        user1.setRole("USER");
 
         User user2 = new User();
         user2.setId(2L);
         user2.setUsername("janedoe");
-        user2.setPassword("password456");
+//        user2.setPassword("password456");
         user2.setEmail("janedoe@example.com");
-        user2.setRole("USER");
-
+//        user2.setRole("USER");
+//
         // Mock the service call
         when(userService.getAllUsers()).thenReturn(Arrays.asList(user1, user2));
 
@@ -116,9 +116,9 @@ class UserControllerTest {
         User user1 = new User();
         user1.setId(1L);
         user1.setUsername("johndoe");
-        user1.setPassword("password123");
+//        user1.setPassword("password123");
         user1.setEmail("johndoe@example.com");
-        user1.setRole("USER");
+//        user1.setRole("USER");
 
         // Mock the service call to return the user when looking for ID 1
         when(userService.getUserById(1)).thenReturn(Optional.of(user1));
@@ -149,16 +149,16 @@ class UserControllerTest {
         User existingUser = new User();
         existingUser.setId(1L);
         existingUser.setUsername("johndoe");
-        existingUser.setPassword("password123");
+//        existingUser.setPassword("password123");
         existingUser.setEmail("johndoe@example.com");
-        existingUser.setRole("USER");
+//        existingUser.setRole("USER");
 
         // Prepare the updated user data
         User updatedUser = new User();
         updatedUser.setUsername("john_doe_updated");
-        updatedUser.setPassword("newpassword123");
+//        updatedUser.setPassword("newpassword123");
         updatedUser.setEmail("john_doe_updated@example.com");
-        updatedUser.setRole("ADMIN");
+//        updatedUser.setRole("ADMIN");
 
         // Mock the service call to update the user
         when(userService.updateUser(1, updatedUser)).thenReturn(updatedUser);
@@ -178,9 +178,9 @@ class UserControllerTest {
         // Prepare the updated user data
         User updatedUser = new User();
         updatedUser.setUsername("john_doe_updated");
-        updatedUser.setPassword("newpassword123");
+//        updatedUser.setPassword("newpassword123");
         updatedUser.setEmail("john_doe_updated@example.com");
-        updatedUser.setRole("ADMIN");
+//        updatedUser.setRole("ADMIN");
 
         // Mock the service call to return null (user not found)
         when(userService.updateUser(1, updatedUser)).thenReturn(null);

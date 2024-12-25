@@ -21,13 +21,28 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(nullable = false)
 	private String username;
-	private String password;
+
+	@Column(nullable = false)
+	private String firstName;
+
+	@Column(nullable = false)
+	private String lastName;
+
+	@Column(nullable = false)
 	private String email;
-	private String role;
 
-	@Column(name = "created_at", updatable = false)
-	private LocalDateTime createdAt = LocalDateTime.now();
+	@Column(nullable = false)
+	private boolean emailVerified;
 
-	// Getters and Setters
+	@Column(nullable = false)
+	private boolean enabled;
+
+	private boolean totp; // Two-factor authentication enabled
+
+	@Column(name = "created_timestamp")
+	private long createdTimestamp; // Unix timestamp for user creation
+
 }

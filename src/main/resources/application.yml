@@ -21,3 +21,12 @@ spring:
 
 server:
   port: 8081
+
+#keycloak
+keycloak:
+  auth-server-url: http://localhost:8180
+  realm: e-commerce
+  client-id: fetch-users
+  client-secret: JNQzGH6C7QopeY1YA18Eze1YZIFWmHKL
+stripe:
+ secretKey: sk_test_51QZsdpDCmMbL4YYOvpviQzhjSi0yZkJBIaCgyB2W0pv0caV9YRK40gGd4eZOKp93lgkTPEhnTTphDV5cjRMwCG3y009Ho7ME33
