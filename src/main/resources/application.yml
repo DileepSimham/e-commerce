@@ -8,25 +8,40 @@ spring:
     password: Rgukt@483
 
   jpa:
-    show-sql: true
+    # show-sql: true
     hibernate:
       ddl-auto: update
       format_sql: true
-              
+
   security:
     oauth2:
       resourceserver:
         jwt:
           jwk-set-uri: "http://localhost:8180/realms/e-commerce/protocol/openid-connect/certs"
 
+#  kafka:
+#    consumer:
+#      bootstrap-servers: localhost:9092
+#      group-id: myGroup
+#      auto-offset-reset: earliest
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#
+#    producer:
+#      bootstrap-servers: localhost:9092
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
 server:
   port: 8081
 
-#keycloak
+# Keycloak Configuration
 keycloak:
   auth-server-url: http://localhost:8180
   realm: e-commerce
   client-id: fetch-users
   client-secret: JNQzGH6C7QopeY1YA18Eze1YZIFWmHKL
+
+# Stripe Configuration
 stripe:
- secretKey: sk_test_51QZsdpDCmMbL4YYOvpviQzhjSi0yZkJBIaCgyB2W0pv0caV9YRK40gGd4eZOKp93lgkTPEhnTTphDV5cjRMwCG3y009Ho7ME33
+  secretKey: sk_test_51QZsdpDCmMbL4YYOvpviQzhjSi0yZkJBIaCgyB2W0pv0caV9YRK40gGd4eZOKp93lgkTPEhnTTphDV5cjRMwCG3y009Ho7ME33

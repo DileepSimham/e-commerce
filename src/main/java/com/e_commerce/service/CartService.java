@@ -11,6 +11,7 @@ import com.e_commerce.dto.StripeResponse;
 import com.e_commerce.entity.Cart;
 import com.e_commerce.entity.Product;
 import com.e_commerce.entity.User;
+import com.e_commerce.enums.OrderStatus;
 import com.e_commerce.repository.CartRepository;
 import com.e_commerce.repository.ProductRepository;
 import com.e_commerce.repository.UserRepository;
@@ -44,7 +45,9 @@ public class CartService {
 				.orElseThrow(() -> new RuntimeException("Product not found with ID" + productId));
 
 		// Add product to cart
+
 		cart.getProducts().add(product);
+		cart.setOrderStatus(OrderStatus.PENDING.toString());
 
 		// Save or update cart in the database
 		return cartRepository.save(cart);
@@ -64,12 +67,12 @@ public class CartService {
 	}
 
 	// 3. Get all products in the user's cart
-	public List<Product> getCartProducts(String user) {
+	public Cart getCartProducts(String user) {
 		// Find the user's cart
 		Cart cart = cartRepository.findByUser(findByUsername(user))
 				.orElseThrow(() -> new RuntimeException("Cart not found"));
 
-		return cart.getProducts(); // Return list of products in the cart
+		return cart; // Return list of products in the cart
 	}
 
 	// 4. Checkout (empty cart after checkout)
@@ -99,7 +102,7 @@ public class CartService {
 		Long quantity = 0L;
 
 		for (Product product : products) {
-			productName += product.getName()+" , ";
+			productName += product.getName() + ",";
 			totalPrice += product.getPrice();
 
 		}
@@ -110,12 +113,12 @@ public class CartService {
 		double myDouble = 10.75;
 		Long myLong = Long.valueOf((long) totalPrice); // Convert to long, then wrap in Long
 		System.out.println(myLong);
-		productRequest.setAmount(myLong*100);
+		productRequest.setAmount(myLong * 100);
 
 		productRequest.setCurrency("USD");
 		productRequest.setQuantity(Long.valueOf(products.size()));
 
-		StripeResponse checkoutProducts = stripeService.checkoutProducts(productRequest,user);
+		StripeResponse checkoutProducts = stripeService.checkoutProducts(productRequest, user);
 
 		// Empty the cart after checkout
 //		cart.getProducts().clear();
@@ -132,5 +135,21 @@ public class CartService {
 		} else {
 			throw new RuntimeException("username not found");
 		}
+	}
+
+	public Cart changeProductStatus(String user, String newStatus) {
+		Cart cart = cartRepository.findByUser(findByUsername(user))
+				.orElseThrow(() -> new RuntimeException("Cart not found"));
+
+		cart.setOrderStatus(newStatus);
+		cartRepository.save(cart);
+		return cart;
+	}
+
+	public List<Cart> getAllCarts() {
+		
+		List<Cart> all = cartRepository.findAll();
+		
+		return all;
 	}
 }

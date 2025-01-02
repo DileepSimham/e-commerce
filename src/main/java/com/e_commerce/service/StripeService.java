@@ -37,9 +37,10 @@ public class StripeService {
 
 		// Create new session with the line items
 		SessionCreateParams params = SessionCreateParams.builder().setMode(SessionCreateParams.Mode.PAYMENT)
-				.setSuccessUrl("http://localhost:4200/cart").setCancelUrl("http://localhost:4200/products")
+				.setSuccessUrl("http://localhost:4200/track-order").setCancelUrl("http://localhost:4200/products")
 				
-				.addLineItem(lineItem).putMetadata("username", username).
+				.addLineItem(lineItem).putMetadata("username", username).putMetadata("productName", productRequest.getName()).
+				putMetadata("quantity", productRequest.getQuantity().toString()).
 				
 				build();
 		

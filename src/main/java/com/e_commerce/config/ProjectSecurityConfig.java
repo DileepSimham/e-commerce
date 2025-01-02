@@ -47,13 +47,16 @@ public class ProjectSecurityConfig {
 //				.requiresChannel(rcc -> rcc.anyRequest().requiresInsecure()) // Only HTTP
 				
 				.csrf(csrf->csrf.disable())
-				.authorizeHttpRequests((requests) -> requests.requestMatchers("/api/users/allUsers").hasRole("ADMIN").
-						requestMatchers("/api/users/**").hasRole("USER")
-						.requestMatchers("/api/products/**").hasAnyRole("USER", "ADMIN")
-//						.requestMatchers("/api/cart/**").hasAnyRole("USER", "ADMIN")
-						.requestMatchers("/myLoans")
-						.authenticated()
-						.requestMatchers("/keycloak/**","/api/cart/**","/webhook/**").permitAll());
+				.authorizeHttpRequests((requests) -> 
+				
+				requests.anyRequest().permitAll());
+//				.requestMatchers("/api/users/allUsers").hasRole("ADMIN").
+//						requestMatchers("/api/users/**").hasRole("USER")
+//						.requestMatchers("/api/products/**").hasAnyRole("USER", "ADMIN")
+////						.requestMatchers("/api/cart/**").hasAnyRole("USER", "ADMIN")
+//						.requestMatchers("/myLoans")
+//						.authenticated()
+//						.requestMatchers("/keycloak/**","/api/cart/**","/webhook/**","/orders/**","/api/orders/**","/**").permitAll());
 		http.oauth2ResourceServer(
 				rsc -> rsc.jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter)));
 		/*
