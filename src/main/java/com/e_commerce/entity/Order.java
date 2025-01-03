@@ -27,11 +27,11 @@ public class Order {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user; // Reference to the User who placed the order
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "product_id", nullable = false)
 	private Product product; // Reference to the Product in the order
 
@@ -49,4 +49,6 @@ public class Order {
 //
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt; // Timestamp when the order was last updated
+	
+
 }

@@ -35,7 +35,7 @@ public class OrderHistory {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user; // User who placed the order
 
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.MERGE)
 	@JoinTable(name = "order_products", joinColumns = @JoinColumn(name = "order_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
 	private List<Product> products = new ArrayList<>(); // Products in the order
 
@@ -47,4 +47,8 @@ public class OrderHistory {
 
 	@Column(nullable = false)
 	private String status; // Order status (e.g., "Pending", "Completed", "Cancelled")
+	
+	private LocalDateTime orderPlacedDate;
+	
+	private LocalDateTime orderDeliveryDate;
 }

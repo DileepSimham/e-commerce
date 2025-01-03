@@ -17,7 +17,7 @@ public class StripeService {
 	@Value("${stripe.secretKey}")
 	private String secretKey;
 
-	public StripeResponse checkoutProducts(ProductRequest productRequest, String username) {
+	public StripeResponse checkoutProducts(ProductRequest productRequest, String username,String flag) {
 		// Set your secret key. Remember to switch to your live secret key in
 		// production!
 		Stripe.apiKey = secretKey;
@@ -40,7 +40,7 @@ public class StripeService {
 				.setSuccessUrl("http://localhost:4200/track-order").setCancelUrl("http://localhost:4200/products")
 				
 				.addLineItem(lineItem).putMetadata("username", username).putMetadata("productName", productRequest.getName()).
-				putMetadata("quantity", productRequest.getQuantity().toString()).
+				putMetadata("quantity", productRequest.getQuantity().toString()).putMetadata("flag", flag).
 				
 				build();
 		

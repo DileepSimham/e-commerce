@@ -100,7 +100,7 @@ public class OrderService {
 		productRequest.setCurrency("USD");
 		productRequest.setName(product.getName());
 
-		StripeResponse checkoutProducts = stripeService.checkoutProducts(productRequest, userEmail);
+		StripeResponse checkoutProducts = stripeService.checkoutProducts(productRequest, userEmail,"noncart");
 
 		return checkoutProducts;
 	}

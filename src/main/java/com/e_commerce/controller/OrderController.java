@@ -77,14 +77,12 @@ public class OrderController {
 	@PutMapping("/changestatus")
 	public ResponseEntity<?> updateOrderStatus(@RequestParam Long orderId, @RequestParam String newStatus) {
 		log.info("Request to update order status. Order ID: {}, New Status: {}", orderId, newStatus);
-
 		try {
-
 			orderService.updateOrderStatus(orderId, newStatus);
 			log.info("Order status updated successfully. Order ID: {}, New Status: {}", orderId, newStatus);
 			return ResponseEntity.ok("Order status updated successfully.");
 		} catch (RuntimeException e) {
-			 log.error("Error updating order status for Order ID: {}. Error: {}", orderId, e.getMessage());
+			log.error("Error updating order status for Order ID: {}. Error: {}", orderId, e.getMessage());
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}

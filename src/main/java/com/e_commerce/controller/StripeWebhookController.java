@@ -23,15 +23,18 @@ import com.e_commerce.repository.OrderRepository;
 import com.e_commerce.repository.ProductRepository;
 import com.e_commerce.repository.UserRepository;
 import com.e_commerce.service.CartService;
+import com.e_commerce.service.KafkaProducer;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/webhook")
+@Slf4j
 public class StripeWebhookController {
 
 	@Autowired
@@ -45,14 +48,15 @@ public class StripeWebhookController {
 
 	@Autowired
 	private ProductRepository productRepository;
-	
-	
+
 	@Autowired
 	private OrderRepository orderRepository;
-	
-	
+
 	@Autowired
 	private CartRepository cartRepository;
+
+	@Autowired
+	private KafkaProducer kafkaProducer;
 
 	private static final String endpointSecret = "whsec_fc3ceb89476bfa3a1bce1c4bfb694957aa9e10b8b0061409989bc4aa2f75ad0a";
 
@@ -65,10 +69,11 @@ public class StripeWebhookController {
 		// Verify webhook signature
 		try {
 			event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
+			log.info("Webhook signature verification successful.");
 
 		} catch (StripeException e) {
 
-			System.out.println(e.getMessage());
+			log.error("Webhook signature verification failed: {}", e.getMessage());
 			return "Webhook signature verification failed.";
 		}
 
@@ -82,13 +87,18 @@ public class StripeWebhookController {
 			String username = session.getMetadata().get("username");
 //			String productName = session.getMetadata().get("productName");
 			String quantity = session.getMetadata().get("quantity");
+			String flag = session.getMetadata().get("flag");
 			List<String> productNames = session.getMetadata().get("productName") != null
 					? List.of(session.getMetadata().get("productName").split(","))
 					: new ArrayList<>();
 
 			if ("paid".equals(paymentStatus)) {
+
+				log.info("Payment being done by {} for user: {}", flag.equals("noncart") ? "non-cart" : "cart",
+						username);
+
 				// Payment was successful
-				System.out.println("Payment successful for user: " + username + " with session: " + sessionId);
+				log.info("Payment successful for user: {} with session: {}", username, sessionId);
 //				cartService.checkout(username);
 
 				// Fetch user
@@ -106,12 +116,11 @@ public class StripeWebhookController {
 				}
 				// Calculate total amount
 				double totalAmount = products.stream().mapToDouble(Product::getPrice).sum();
-				
-				
+				log.info("Total amount for the order: {}", totalAmount);
+
 				System.out.println(products);
-				
-				
-				for(Product product:products) {
+
+				for (Product product : products) {
 					// save order
 					Order order = new Order();
 
@@ -122,24 +131,24 @@ public class StripeWebhookController {
 					order.setOrderStatus("PENDING");
 					order.setCreatedAt(LocalDateTime.now());
 					order.setUpdatedAt(LocalDateTime.now());
-					
-					
 
 					// Update product stock
 					products.get(0).setStock(products.get(0).getStock() - Integer.parseInt(quantity));
 					productRepository.save(products.get(0));
-					
+
 					orderRepository.save(order);
+					log.info("Order saved for product: {} with ID: {}", product.getName(), order.getId());
+
+					kafkaProducer.updateOrderStatus(order);
 				}
 
-				
-				
-				Cart cart = cartRepository.findByUser(user).orElseThrow(()->new RuntimeException("cart not found"));
-				
-				cart.getProducts().clear();
-				
-				cartRepository.save(cart);
-				
+				if (flag.equals("cart")) {
+					Cart cart = cartRepository.findByUser(user)
+							.orElseThrow(() -> new RuntimeException("cart not found"));
+					cart.getProducts().clear();
+					cartRepository.save(cart);
+					log.info("Cart cleared for user: {}", username);
+				}
 
 				// Save order history
 //                OrderHistory orderHistory = new OrderHistory();
@@ -157,7 +166,7 @@ public class StripeWebhookController {
 				// Example: updateOrderStatus(sessionId, "COMPLETED");
 			} else {
 				// Payment failed or incomplete
-				System.out.println("Payment failed for session: " + sessionId);
+				log.warn("Payment failed for session: {}", sessionId);
 				// Handle the failed payment case
 			}
 		}

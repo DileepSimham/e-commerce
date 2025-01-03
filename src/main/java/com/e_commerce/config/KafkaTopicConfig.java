@@ -7,11 +7,12 @@ import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
 public class KafkaTopicConfig {
-	
-	
-//	@Bean
-//	public NewTopic ecommerceTopic() {
-//		return TopicBuilder.name("order-status-updates").build();
-//	}
+
+	@Bean
+	public NewTopic ecommerceTopic() {
+		return TopicBuilder.name("order-status")
+				.partitions(3)
+				.build();
+	}
 
 }

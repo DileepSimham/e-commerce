@@ -118,7 +118,7 @@ public class CartService {
 		productRequest.setCurrency("USD");
 		productRequest.setQuantity(Long.valueOf(products.size()));
 
-		StripeResponse checkoutProducts = stripeService.checkoutProducts(productRequest, user);
+		StripeResponse checkoutProducts = stripeService.checkoutProducts(productRequest, user,"cart");
 
 		// Empty the cart after checkout
 //		cart.getProducts().clear();

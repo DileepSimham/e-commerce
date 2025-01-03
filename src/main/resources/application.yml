@@ -19,18 +19,35 @@ spring:
         jwt:
           jwk-set-uri: "http://localhost:8180/realms/e-commerce/protocol/openid-connect/certs"
 
-#  kafka:
-#    consumer:
-#      bootstrap-servers: localhost:9092
-#      group-id: myGroup
-#      auto-offset-reset: earliest
-#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#
-#    producer:
-#      bootstrap-servers: localhost:9092
-#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-#      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: e-commerce
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+      properties:
+        spring.json.trusted.packages: "*"
+
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: dileep.simham483@gmail.com
+    password: your app password
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 
 server:
   port: 8081
